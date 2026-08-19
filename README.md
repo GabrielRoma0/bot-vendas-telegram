@@ -92,6 +92,16 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## Rodar os testes
+
+Os testes usam fakes/mocks para Bright Data e Telegram — não fazem
+chamada de rede real nem exigem `.env` preenchido.
+
+```bash
+pip install -r requirements-dev.txt
+pytest -v
+```
+
 ## 7. Configurar os secrets no GitHub Actions
 
 No repositório do GitHub, vá em **Settings > Secrets and variables >
