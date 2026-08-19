@@ -102,6 +102,10 @@ pip install -r requirements-dev.txt
 pytest -v
 ```
 
+Também rodam automaticamente a cada push/PR na `main` via
+`.github/workflows/tests.yml` — não precisa de nenhum secret, já que os
+testes usam fakes no lugar do Bright Data e do Telegram.
+
 ## 7. Configurar os secrets no GitHub Actions
 
 No repositório do GitHub, vá em **Settings > Secrets and variables >
