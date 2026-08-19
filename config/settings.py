@@ -22,7 +22,10 @@ BRIGHTDATA_AMAZON_DATASET_ID = os.getenv("BRIGHTDATA_AMAZON_DATASET_ID", "")
 
 AMAZON_AFFILIATE_TAG = os.getenv("AMAZON_AFFILIATE_TAG", "")
 
-PRICE_DROP_THRESHOLD_PERCENT = float(os.getenv("PRICE_DROP_THRESHOLD_PERCENT", "15"))
+# `os.getenv(..., "15")` não cobre o caso da var existir mas vazia (ex: uma
+# `vars.X` do GitHub Actions não cadastrada resolve para string vazia, não
+# para ausente) — por isso o fallback é aplicado com `or` em vez de default.
+PRICE_DROP_THRESHOLD_PERCENT = float(os.getenv("PRICE_DROP_THRESHOLD_PERCENT") or "15")
 
 
 @dataclass(frozen=True)
