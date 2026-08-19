@@ -1,7 +1,22 @@
 [
   {
-    "id": "echo-dot-5-br",
-    "url": "https://www.amazon.com.br/Echo-Dot-5%C2%AA-gera%C3%A7%C3%A3o-Cor-Preta/dp/B09B8VGCR8",
-    "name": "Echo Dot (5ª Geração) Preto"
+    "id": "echo-dot-5",
+    "url": "https://www.amazon.com.br/dp/B09B8VGCR8",
+    "name": "Echo Dot 5ª Geração"
+  },
+  {
+    "id": "fire-tv-stick-4k",
+    "url": "https://www.amazon.com.br/dp/B0CJLFQP4W",
+    "name": "Fire TV Stick 4K"
+  },
+  {
+    "id": "jbl-flip-6",
+    "url": "https://www.amazon.com.br/dp/B09HGRXXTM",
+    "name": "JBL Flip 6"
+  },
+  {
+    "id": "mi-band-8",
+    "url": "https://www.amazon.com.br/dp/B0CHJ2C1YS",
+    "name": "Xiaomi Mi Band 8"
   }
 ]
