@@ -35,15 +35,25 @@ class BrightDataClient:
             }
         )
 
+    @staticmethod
+    def _raise_for_status(resp: requests.Response) -> None:
+        try:
+            resp.raise_for_status()
+        except requests.HTTPError as exc:
+            raise BrightDataError(f"{exc} — resposta: {resp.text[:500]}") from exc
+
     def trigger_collection(self, urls: list[str]) -> str:
         """Dispara a coleta para uma lista de URLs e retorna o snapshot_id."""
-        resp = self._session.post(
-            f"{BASE_URL}/trigger",
-            params={"dataset_id": self.dataset_id, "include_errors": "true"},
-            json=[{"url": url} for url in urls],
-            timeout=30,
-        )
-        resp.raise_for_status()
+        try:
+            resp = self._session.post(
+                f"{BASE_URL}/trigger",
+                params={"dataset_id": self.dataset_id, "include_errors": "true"},
+                json=[{"url": url} for url in urls],
+                timeout=30,
+            )
+        except requests.RequestException as exc:
+            raise BrightDataError(f"Falha de rede ao disparar coleta: {exc}") from exc
+        self._raise_for_status(resp)
         data = resp.json()
         snapshot_id = data.get("snapshot_id")
         if not snapshot_id:
@@ -54,8 +64,11 @@ class BrightDataClient:
         """Aguarda o snapshot ficar pronto (status 'ready')."""
         deadline = time.monotonic() + POLL_TIMEOUT_SECONDS
         while time.monotonic() < deadline:
-            resp = self._session.get(f"{BASE_URL}/progress/{snapshot_id}", timeout=30)
-            resp.raise_for_status()
+            try:
+                resp = self._session.get(f"{BASE_URL}/progress/{snapshot_id}", timeout=30)
+            except requests.RequestException as exc:
+                raise BrightDataError(f"Falha de rede ao consultar progresso: {exc}") from exc
+            self._raise_for_status(resp)
             status = resp.json().get("status")
             if status == "ready":
                 return
@@ -65,12 +78,15 @@ class BrightDataClient:
         raise BrightDataError(f"Timeout esperando snapshot {snapshot_id}")
 
     def get_snapshot_data(self, snapshot_id: str) -> list[dict]:
-        resp = self._session.get(
-            f"{BASE_URL}/snapshot/{snapshot_id}",
-            params={"format": "json"},
-            timeout=60,
-        )
-        resp.raise_for_status()
+        try:
+            resp = self._session.get(
+                f"{BASE_URL}/snapshot/{snapshot_id}",
+                params={"format": "json"},
+                timeout=60,
+            )
+        except requests.RequestException as exc:
+            raise BrightDataError(f"Falha de rede ao baixar snapshot: {exc}") from exc
+        self._raise_for_status(resp)
         data = resp.json()
         return data if isinstance(data, list) else [data]
 

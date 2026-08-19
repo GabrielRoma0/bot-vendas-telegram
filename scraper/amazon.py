@@ -81,7 +81,12 @@ def fetch_products(urls: list[str]) -> list[ProductResult]:
             for url in urls
         ]
 
-    records_by_url = {record.get("url", ""): record for record in records}
+    def _record_url(record: dict) -> str:
+        # A URL de origem vem em `input.url`; o campo `url` só é
+        # preenchido quando a extração da página é bem-sucedida.
+        return record.get("input", {}).get("url") or record.get("url", "")
+
+    records_by_url = {_record_url(record): record for record in records}
 
     results = []
     for url in urls:
